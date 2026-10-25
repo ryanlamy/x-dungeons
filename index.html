@@ -290,6 +290,8 @@ on(document,'visibilitychange',()=>{if(document.hidden&&scene==='play'&&G&&!G.pa
 function getMove(){let x=0,y=0;if(IN.stick.id!==null){const dx=IN.stick.x-IN.stick.bx,dy=IN.stick.y-IN.stick.by;const d=hyp(dx,dy);const R=52;
   if(d>R){IN.stick.bx+=dx/d*(d-R);IN.stick.by+=dy/d*(d-R);}const m=Math.min(1,d/R);if(d>4){x=dx/d*m;y=dy/d*m;}}
  else{x=(IN.keys.r?1:0)-(IN.keys.l?1:0);y=(IN.keys.d?1:0)-(IN.keys.u?1:0);const d=hyp(x,y);if(d>0){x/=d;y/=d;}}return{x,y,m:hyp(x,y)};}
+const CHEAT={msg:''};
+function applyCheat(code){code=(code||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code!=='LAMY')return false;WEAPONS.forEach(w=>{SAVE.weapons[w.id]={lvl:20,xp:0};});HEROES.forEach(x=>{SAVE.heroes[x.id]={lvl:100,xp:0};});save();return true;}
 let scene='menu',menu='title',G=null;const P={};let menuT=0;
 function solidsHit(x,y,r){for(const s of G.solids){const cx=clamp(x,s.x,s.x+s.w),cy=clamp(y,s.y,s.y+s.h);if((x-cx)*(x-cx)+(y-cy)*(y-cy)<r*r)return s;}return null;}
 function collide(o,r){for(let it=0;it<2;it++)for(const s of G.solids){const cx=clamp(o.x,s.x,s.x+s.w),cy=clamp(o.y,s.y,s.y+s.h);let dx=o.x-cx,dy=o.y-cy;const d2=dx*dx+dy*dy;
@@ -679,7 +681,7 @@ function drawMenuBg(){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnable
  for(let i=0;i<24;i++){const x=(i*97+t*20*(1+i%3))%W,y=H-((i*53+t*30*(1+i%2))%H);ctx.fillStyle=i%3?'#ff7a2a':'#ffcf4a';ctx.globalAlpha=.5;ctx.fillRect(x,y,2,2);}ctx.globalAlpha=1;}
 const LO={slot:0};
 function h(tag,p){const e=document.createElement(tag);if(p){for(const k in p){const v=p[k];if(v==null||v===false)continue;
-  if(k==='class')e.className=v;else if(k==='data'){for(const d in v)e.dataset[d]=String(v[d]);}else if(k==='style')Object.assign(e.style,v);else if(k==='disabled')e.disabled=true;else if(k==='width'||k==='height')e[k]=v;}}
+  if(k==='class')e.className=v;else if(k==='data'){for(const d in v)e.dataset[d]=String(v[d]);}else if(k==='style')Object.assign(e.style,v);else if(k==='disabled')e.disabled=true;else if(k==='width'||k==='height')e[k]=v;else e.setAttribute(k,v);}}
  const add=c=>{if(c==null||c===false)return;if(Array.isArray(c)){c.forEach(add);return;}e.appendChild(typeof c==='object'?c:document.createTextNode(String(c)));};
  for(let i=2;i<arguments.length;i++)add(arguments[i]);return e;}
 function heroCanvas(id){return h('canvas',{class:'pv',data:{hero:id},width:12,height:16});}
@@ -695,8 +697,12 @@ const M={
  title(){return h('div',{class:'scr'},h('div',{class:'ctr'},h('div',{class:'logo'},'X-DUNGEONS'),h('div',{class:'sub'},'ACTION HEROES \u00B7 OLD-SCHOOL BUTTON SMASHER'),
   h('div',{class:'heroes'},HEROES.map(x=>heroCanvas(x.id))),
   h('button',{class:'pri big',data:{a:'roster'}},'\u25B6 PLAY'),
-  h('div',{class:'row',style:{marginTop:'0'}},h('button',{data:{a:'help'}},'How to Play'),h('button',{data:{a:'mute'}},'Sound: '+(SAVE.mute?'Off':'On'))),
+  h('div',{class:'row',style:{marginTop:'0'}},h('button',{data:{a:'help'}},'How to Play'),h('button',{data:{a:'mute'}},'Sound: '+(SAVE.mute?'Off':'On')),h('button',{data:{a:'cheat'}},'Cheat Code')),
   h('div',{class:'foot'},'Weapons collected: '+owned().length+'/'+WEAPONS.length+' \u00B7 Total kills: '+SAVE.kills+(store.ok?' \u00B7 Progress saves on this device':' \u00B7 Progress is not saved in this view'))));},
+ cheat(){return h('div',{class:'scr dim'},hdr('title','Cheat Code'),h('div',{class:'help'},h('p',null,'Enter a code to unlock bonuses.'),
+   h('input',{id:'cheatIn',type:'text',autocomplete:'off',autocapitalize:'characters',spellcheck:'false',placeholder:'ENTER CODE',style:{width:'100%',padding:'12px',fontSize:'18px',textAlign:'center',textTransform:'uppercase',boxSizing:'border-box',margin:'8px 0'}}),
+   h('div',{id:'cheatMsg',style:{minHeight:'24px',textAlign:'center',fontWeight:'bold'}},CHEAT.msg||'')),
+   h('div',{class:'row'},h('button',{class:'pri',data:{a:'cheatgo'}},'Activate'),h('button',{data:{a:'title'}},'Back')));},
  help(){const li=(b,t)=>h('li',null,h('b',null,b),' '+t);
   return h('div',{class:'scr dim'},hdr('title','How to Play'),h('div',{class:'help'},h('ul',null,
   li('Move:','drag anywhere on the left side (virtual joystick). Keyboard: WASD / arrows.'),
@@ -758,6 +764,8 @@ on(ui,'click',e=>{const t=e.target.closest('[data-a]');if(!t||t.disabled)return;
   case 'quit':finishRun(false,true);break;
   case 'again':startRun(lastResult.d,lastResult.diff);break;
   case 'next':startRun(lastResult.d+1,lastResult.diff);break;
+  case 'cheat':CHEAT.msg='';showMenu('cheat');break;
+  case 'cheatgo':{const el=document.getElementById('cheatIn');const ok=applyCheat(el?el.value:'');CHEAT.msg=ok?'CHEAT ACTIVATED! All weapons Lv 20 and all heroes Lv 100.':'Invalid code.';showMenu('cheat');if(ok)AU.sfx('win');break;}
   case 'mute':toggleMute();showMenu(menu);break;}});
 let last=performance.now(),raf=0,fps=60,errs=0;
 function frame(now){if(!alive)return;raf=requestAnimationFrame(frame);let dt=(now-last)/1000;last=now;if(!(dt>0))dt=.016;dt=Math.min(.05,dt);fps=fps*.95+(1/dt)*.05;menuT+=dt;
