@@ -79,6 +79,7 @@ const CSS=`
 .xg .stat{font-size:14px;color:${T.text};line-height:1.6}.xg .stat b{color:${T.gold}}
 .xg .foot{font-size:11px;color:${T.faint}}
 .xg .vm{display:inline-block;background:#8a0f1a;color:#fff;border:2px solid #ff4a4a;border-radius:5px;padding:4px 10px;font-weight:900;font-size:13px;letter-spacing:2px;box-shadow:0 0 12px rgba(255,60,60,.45)}
+.xg .clist{display:flex;flex-direction:column;gap:6px;margin-top:6px}.xg .crow{display:flex;align-items:center;gap:10px;background:rgba(0,0,0,.35);border-radius:8px;padding:8px 10px}.xg .crow.on{outline:2px solid #ffcf4a}.xg .crow .t{flex:1;display:flex;flex-direction:column;text-align:left}.xg .crow small{opacity:.85;font-size:12px;line-height:1.3}.xg .crow button{min-width:64px;min-height:40px}
 .xg .vmrow{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
 .xg .vmrow button{min-height:38px;padding:6px 12px;font-size:13px}
 .xg .qt{max-width:360px;margin:2px auto;background:rgba(255,207,74,.08);border:2px solid ${T.gold};border-left-width:6px;border-radius:8px;padding:10px 14px;text-align:left}
@@ -117,7 +118,7 @@ const pick=a=>a[Math.floor(Math.random()*a.length)];
 const angDiff=(a,b)=>{let d=(b-a)%TAU;if(d>Math.PI)d-=TAU;if(d<-Math.PI)d+=TAU;return d;};
 const hyp=Math.hypot;
 const store=(function(){const mem={};try{const ls=window.localStorage;ls.setItem('__xg','1');ls.removeItem('__xg');return{ok:true,get:k=>ls.getItem(k),set:(k,v)=>{try{ls.setItem(k,v);}catch(e){}}};}catch(e){return{ok:false,get:k=>(k in mem?mem[k]:null),set:(k,v)=>{mem[k]=v;}};}})();
-const PAL={k:'#16111c',s:'#e3a979',S:'#b87a50',h:'#2b1e16',H:'#4a3424',j:'#1d1b21',J:'#3a3640',d:'#55555e',p:'#363a46',b:'#5a3a22',r:'#d8262c',R:'#a3161c',o:'#5d6b2e',O:'#3f4920',g:'#a9abb0',G:'#7b7e85',w:'#f1ede2',c:'#4c6d2c',m:'#a7b0ba',n:'#6b4a2a',y:'#ffd23a',z:'#72b04c',t:'#38598a',v:'#5c3080',V:'#3c1e56',a:'#e8d8a8',e:'#ff2f2f',u:'#7ec8ff',T:'#8a7d4c',f:'#8c9152',F:'#5d6236',q:'#bdb69c',Q:'#2d301f',l:'#1e1b14',x:'#8dff5a',M:'#dfe5ec',N:'#8a94a0',P:'#1f2d4d',A:'#7a4a2e',B:'#56321e',W:'#f4f4f4',C:'#c4a66a',D:'#8f7746',E:'#7a5a30'};
+const PAL={k:'#16111c',s:'#e3a979',S:'#b87a50',h:'#2b1e16',H:'#4a3424',j:'#1d1b21',J:'#3a3640',d:'#55555e',p:'#363a46',b:'#5a3a22',r:'#d8262c',R:'#a3161c',o:'#5d6b2e',O:'#3f4920',g:'#a9abb0',G:'#7b7e85',w:'#f1ede2',c:'#4c6d2c',m:'#a7b0ba',n:'#6b4a2a',y:'#ffd23a',z:'#72b04c',t:'#38598a',v:'#5c3080',V:'#3c1e56',a:'#e8d8a8',e:'#ff2f2f',u:'#7ec8ff',T:'#8a7d4c',f:'#8c9152',F:'#5d6236',q:'#bdb69c',Q:'#2d301f',l:'#1e1b14',x:'#8dff5a',M:'#dfe5ec',N:'#8a94a0',P:'#1f2d4d',A:'#7a4a2e',B:'#56321e',W:'#f4f4f4',C:'#c4a66a',D:'#8f7746',E:'#7a5a30',I:'#fff4d6',L:'#2b2733',K:'#4b4656',X:'#b9bec6',Z:'#6d7380'};
 const MAPS={
 arnold:["...hhhhhh...","..hhhhhhhh..","..hhsssssh..","..skkkkkkk..","..sssssssS..","...sssSss...","..jjjSSjjj..",".jjjjddjjjj.","jjJjjddjjJjj","jjJjjddjjJjj","sjJjjddjjJjs","s..jjjjjj..s","...pppppp...","...pp..pp...","...pp..pp...","..kkk..kkk.."],
 rambo:["...hhhhhh...","..rrrrrrrr.r",".hhsssssshr.",".hsksssksh..",".hhsssssshh.",".h.sssSss.h.","..oossssoo..",".soossssoos.","sSoosnssooSs","sS.oosnsoo.S","s..oossnoo.s","...nnnnnnn..","...oooooo...","...oo..oo...","...OO..OO...","..kkk..kkk.."],
@@ -134,6 +135,7 @@ predator:["..l.qqqq.l..",".llqqqqqqll.","l.lqxqqxql.l","l.lqqqqqql.l","l..fqQQqf
 t1000:["............","...NNNNNN...","..NMMMMMMN..","..MkMMMkM...","..MMMMMMMN..","...MMNMMM...","..PPPPPPPP..",".MPPyPPPPPPM",".MPPPPPPPPPM","MN.PPPPPP.NM","M..PPPPPP..M","...kkkkkk..w","...PP..PP..w","...PP..PP...","...PP..PP...","..kkk..kkk.."],
 apollo:["............","...kkkkkk...","..kkkkkkkk..","..kAAAAAAk..","..AkAAAkA...","...AAABAA...","..AAAAAAAA..",".AAABAABAAA.",".AAAAAAAAAA.","ttAAAAAAAAtt","tt.AAAAAA.tt","...WWWWWW...","...tyrWrW...","...AA..AA...","...AA..AA...","..WWW..WWW.."],
 sheriff:["....EEEE....","...EEnnEE...",".EEEEEEEEEE.","..sksssks...","..ssssssss..","...sSSSss...","..CCCCCCCC..",".CCyCCCCnCC.",".CCCCCCCCCC.","sCCCCCCCCCCs","s.CCCCCCCC.s","...nnynnn...","...DDDDDD...","...DD..DD...","...DD..DD...","..kkk..kkk.."],
+barb:["...aaaaaa...","..aaaIaaaa..","..aassssaa..","..askssksa..","...ssssss...","....sSSs....","..KLLLLLLK..",".LLKLmLLKLL.",".LLLLmLLLLL.","kLKLLmLLLKXk","k..LLmLL.ZXZ","...kkykkXZX.","...LLLLLL...","...LL..LL...","...kk..kk...","..kmk..kmk.."],
 sib:["...yyyyyy...","..yyyyyyyy..","..ssssssss..","..skssssks..","..ssssssss..","...ssSSss...",".ssssssssss.","sssSssssSsss","ssssssssssss","RRssssssssRR","RR.ssssss.RR","...rrrrrr...","...rrwwrr...","...ss..ss...","...ss..ss...","..kkk..kkk.."]
 };
 const SPR={};
@@ -179,13 +181,15 @@ const HEROES=[
 {id:'rocky',name:'X-Rocky',title:'The Southpaw Brawler',hp:125,spd:124,def:.1,crit:.12,sx:'flurry',dg:'slip',start:['stallion','mitts'],sp:{name:'Philly Flurry',cd:6,desc:'A blur of jabs finished by a knockout uppercut.'},dodge:'Slip & Counter: dodge an attack and your next hit deals 3x.'},
 {id:'dutch',name:'X-Dutch',title:'The Squad Leader',hp:140,spd:112,def:.12,crit:.04,sx:'volley',dg:'cloak',start:['carbine','knife'],sp:{name:'Plasma Volley',cd:6,desc:'Fires three homing plasma bolts that explode.'},dodge:'Mud-Cloak: dodging cloaks you; enemies lose you and your next hit deals 2.5x.'}
 ];
+// MELISSA cheat: bonus hero, only in Hero Mode while the cheat is ON. Inspired by a 90s barbed-wire bounty-hunter heroine; name and look altered.
+const BARB={id:'barb',name:'X-Barb',title:'The Barbed-Wire Bounty Hunter',hp:125,spd:130,def:.1,crit:.12,sx:'whip',dg:'bike',vcol:'#b9bec6',start:['sawed','knife'],sig:['sawed','spincock','photon'],sp:{name:'Barbed Wire Whip Crack',cd:6,desc:'Long-reach barbed whip lash: hits everything in a wide cone and makes them bleed.'},dodge:'Bike Slide: long slide dodge that cuts through enemies in your path.'};
 const VILLAINS=[
 {id:'predator',name:'X-Predator',title:'The Jungle Hunter',hp:145,spd:118,def:.15,crit:.06,sx:'volley',dg:'cloak',vcol:'#5ad8ff',start:['spear','knife'],sig:['caster','wrist','disc','spear'],sp:{name:'Plasma Caster Volley',cd:6,desc:'Shoulder cannon fires three homing plasma bolts that explode.'},dodge:'Active Camo: dodging cloaks you; enemies lose you and your next hit deals 2.5x.'},
 {id:'t1000',name:'X-T1000',title:'The Liquid-Metal Hunter',hp:130,spd:126,def:.2,crit:.04,sx:'dash',dg:'flow',vcol:'#cfd6de',start:['pistol','knife'],sig:['armblade','pistol'],sp:{name:'Blade-Arm Lunge',cd:5,desc:'Morphs an arm into a blade and lunges, slicing everything in its path.'},dodge:'Liquid Reform: long dodge that reforms you, healing 5% HP.'},
 {id:'apollo',name:'X-Apollo',title:'The Master of Disaster',hp:118,spd:130,def:.08,crit:.14,sx:'flurry',dg:'slip',start:['starglove','mitts'],sig:['starglove','golden'],sp:{name:'Showboat Flurry',cd:6,desc:'A dazzling blur of jabs finished by a knockout right hand.'},dodge:'Showboat Slip: dodge an attack and your next hit deals 3x.'},
 {id:'sheriff',name:'X-Sheriff',title:'The Small-Town Lawman',hp:155,spd:106,def:.18,crit:.04,sx:'slam',dg:'charge',pellets:1,start:['spincock','sawed'],sig:['spincock','sawed'],sp:{name:'Baton Slam',cd:7,desc:'Leaps and slams the baton down, then a shotgun ring blasts outward.'},dodge:'Lawman Tackle: dodge rams enemies.'}
 ];
-const HMAP={};HEROES.concat(VILLAINS).forEach(h=>HMAP[h.id]=h);
+const HMAP={};HEROES.concat([BARB],VILLAINS).forEach(h=>HMAP[h.id]=h);
 const QUOTES={
 arnold:[{q:"I'll be back.",by:'The Terminator',film:'The Terminator (1984)'},{q:'Hasta la vista, baby.',by:'The Terminator',film:'Terminator 2: Judgment Day (1991)'}],
 rambo:[{q:'They drew first blood, not me.',by:'John Rambo',film:'First Blood (1982)'},{q:'Live for nothing, or die for something.',by:'John Rambo',film:'Rambo (2008)'}],
@@ -194,6 +198,7 @@ dutch:[{q:'If it bleeds, we can kill it.',by:'Dutch',film:'Predator (1987)'},{q:
 predator:[{q:'What the hell are you?',by:'The Predator, mimicking Dutch',film:'Predator (1987)'},{q:"I ain't got time to bleed.",by:'Blain',film:'Predator (1987)'}],
 t1000:[{q:"Say... that's a nice bike.",by:'T-1000',film:'Terminator 2: Judgment Day (1991)'},{q:"Wolfie's fine, honey. Wolfie's just fine.",by:'T-1000, mimicking Janelle',film:'Terminator 2: Judgment Day (1991)'}],
 apollo:[{q:"Ain't gonna be no rematch.",by:'Apollo Creed',film:'Rocky (1976)'},{q:"I'll drop him in three.",by:'Apollo Creed',film:'Rocky (1976)'}],
+barb:[{q:"Don't call me babe!",by:'Barb Wire',film:'Barb Wire (1996)'},{q:"Half the money? Fine. I'll take half your daughter.",by:'Barb Wire',film:'Barb Wire (1996)'}],
 sheriff:[{q:'Whatever possessed God in heaven to make a man like Rambo?',by:'Sheriff Will Teasle',film:'First Blood (1982)'},{q:"God didn't make Rambo. I made him!",by:'Col. Trautman',film:'First Blood (1982)'}]
 };
 function pickQuote(hid){const a=QUOTES[hid];return a?pick(a):null;}
@@ -252,16 +257,22 @@ overmind:{name:'OVERMIND Core',map:null,sc:1,hp:2200,dmg:20,spd:42,r:32,pats:['s
 };
 const SKEY='xdungeons_save_v1',BKEY='xdungeons_save_bad_v1',MKEY='xdungeons_mode_v1';
 let SAVE=null;let BAD=store.get(MKEY)==='bad';
-function team(){return BAD?VILLAINS:HEROES;}
-function defSave(){const TM=team();const s={v:1,heroes:{},weapons:{},load:{},clr:[0,0,0,0,0],mute:false,last:TM[0].id,diff:0,kills:0,runs:0};
+function readMel(){try{const d=JSON.parse(store.get('xdungeons_cheats_v1')||'null');return !!(d&&d.u&&d.u.MELISSA&&d.mel);}catch(e){return false;}}
+let MEL=readMel();
+function team(){return BAD?VILLAINS:MEL?HEROES.concat([BARB]):HEROES;}
+// every character that has a save entry in the current mode (X-Barb keeps her levels while MELISSA is OFF)
+function allTeam(){return BAD?VILLAINS:HEROES.concat([BARB]);}
+function defSave(){const TM=allTeam();const s={v:1,heroes:{},weapons:{},load:{},clr:[0,0,0,0,0],mute:false,last:TM[0].id,diff:0,kills:0,runs:0};
   TM.forEach(h=>{s.heroes[h.id]={lvl:1,xp:0};s.load[h.id]=h.start.slice();h.start.forEach(w=>{s.weapons[w]={lvl:1,xp:0};});});
   ['knife','mitts','pistol','sawed'].forEach(w=>{if(!s.weapons[w])s.weapons[w]={lvl:1,xp:0};});return s;}
-function loadSave(){const TM=team();let s=null;try{s=JSON.parse(store.get(BAD?BKEY:SKEY)||'null');}catch(e){s=null;}const d=defSave();if(!s||s.v!==1)return d;
+function loadSave(){const TM=allTeam();let s=null;try{s=JSON.parse(store.get(BAD?BKEY:SKEY)||'null');}catch(e){s=null;}const d=defSave();if(!s||s.v!==1)return d;
   s.heroes=s.heroes||{};s.load=s.load||{};s.weapons=s.weapons||{};
   for(const k in s.weapons)if(!WMAP[k])delete s.weapons[k];
   for(const k in d.weapons)if(!s.weapons[k])s.weapons[k]=d.weapons[k];
   TM.forEach(h=>{if(!s.heroes[h.id])s.heroes[h.id]=d.heroes[h.id];const ld=s.load[h.id];if(!Array.isArray(ld)||ld.length!==2||!s.weapons[ld[0]]||!s.weapons[ld[1]])s.load[h.id]=d.load[h.id];});
-  if(!Array.isArray(s.clr))s.clr=[0,0,0,0,0];if(!TM.some(h=>h.id===s.last))s.last=TM[0].id;return Object.assign(d,s);}
+  if(!Array.isArray(s.clr))s.clr=[0,0,0,0,0];if(!team().some(h=>h.id===s.last))s.last=team()[0].id;
+  if(!BAD&&s.pre&&typeof s.pre==='object'&&s.pre.heroes&&typeof s.pre.heroes==='object'&&!s.pre.heroes.barb){s.pre.heroes.barb=Object.assign({},s.heroes.barb);s.pre.load=s.pre.load||{};s.pre.load.barb=s.load.barb.slice();s.heroes.barb={lvl:100,xp:0};}
+  return Object.assign(d,s);}
 function save(){store.set(BAD?BKEY:SKEY,JSON.stringify(SAVE));}
 function setMode(bad){bad=!!bad;if(bad===BAD)return;const mute=SAVE.mute;save();BAD=bad;store.set(MKEY,bad?'bad':'hero');SAVE=loadSave();SAVE.mute=mute;save();AU.setMute(mute);}
 SAVE=loadSave();
@@ -270,7 +281,7 @@ const XKEY='xdungeons_bonus_v1',LBLKEY='xdungeons_lb_local_v1';
 function bonusData(){let d=null;try{d=JSON.parse(store.get(XKEY)||'null');}catch(e){d=null;}if(!d||typeof d!=='object')d={};d.unlocked=!!d.unlocked;
  if(!d.pb||typeof d.pb!=='object'||!(d.pb.wave>=1))d.pb=null;return d;}
 function setBonusData(d){store.set(XKEY,JSON.stringify(d));}
-function bonusOn(){return bonusData().unlocked;}
+function bonusOn(){const d=cheatData();return !!(d.u.BONUS&&d.bonus);}
 function cleanName(v){return String(v==null?'':v).replace(/[\u0000-\u001f\u007f-\u009f<>\u200b-\u200f\u2028-\u202e\u2060-\u206f\ufeff]/g,'').replace(/\s+/g,' ').trim().slice(0,16).trim();}
 function cleanRow(r){if(!r||typeof r!=='object')return null;const name=cleanName(r.name),wave=Math.floor(Number(r.wave));if(!name||!(wave>=1&&wave<=500))return null;return{name,wave,hero:cleanName(r.hero)||'?',t:Number(r.t)||0};}
 const LBC={url:String(typeof LB_URL==='string'?LB_URL:'').trim().replace(/\/+$/,''),key:String(typeof LB_KEY==='string'?LB_KEY:'').trim(),ms:typeof LB_TIMEOUT_MS==='number'?LB_TIMEOUT_MS:5000};
@@ -398,11 +409,44 @@ function getMove(){let x=0,y=0;if(IN.stick.id!==null){const dx=IN.stick.x-IN.sti
   if(d>R){IN.stick.bx+=dx/d*(d-R);IN.stick.by+=dy/d*(d-R);}const m=Math.min(1,d/R);if(d>4){x=dx/d*m;y=dy/d*m;}}
  else{x=(IN.keys.r?1:0)-(IN.keys.l?1:0);y=(IN.keys.d?1:0)-(IN.keys.u?1:0);const d=hyp(x,y);if(d>0){x/=d;y/=d;}}return{x,y,m:hyp(x,y)};}
 const CHEAT={msg:''};
+const CKEY='xdungeons_cheats_v1',CNAMES=['LAMY','BAD','BONUS','SUPERMAN','MELISSA'];
+const CDESC={LAMY:'All weapons Lv 20 and all characters Lv 100 (current mode). OFF restores your earned levels.',BAD:'Villain Mode: play as the four villains (own saved progress).',BONUS:'Shows the Bonus Arena and Leaderboard. OFF hides them; scores are kept.',SUPERMAN:'Invincible: take no damage in dungeons and the Bonus Arena. Scores are not saved while on.',MELISSA:'Adds a 5th hero, X-Barb the Barbed-Wire Bounty Hunter, to the hero roster (Hero Mode only; Villain Mode keeps the four villains). OFF hides her; her levels are kept.'};
+function cheatData(){let d=null;try{d=JSON.parse(store.get(CKEY)||'null');}catch(e){d=null;}
+ if(!d||typeof d!=='object'||!d.u||typeof d.u!=='object'){const old=bonusData().unlocked;d={u:{},bonus:old,sup:false};if(old)d.u.BONUS=1;if(BAD)d.u.BAD=1;store.set(CKEY,JSON.stringify(d));}
+ d.bonus=!!d.bonus;d.sup=!!d.sup;d.mel=!!d.mel;const u={};CNAMES.forEach(n=>{if(d.u[n])u[n]=1;});d.u=u;return d;}
+function setCheatData(d){store.set(CKEY,JSON.stringify(d));}
+function superOn(){const d=cheatData();return !!(d.u.SUPERMAN&&d.sup);}
+function snapOf(sv){return JSON.parse(JSON.stringify({heroes:sv.heroes,weapons:sv.weapons,load:sv.load}));}
+function restorePre(sv){const pr=sv.pre;delete sv.pre;if(!pr||typeof pr!=='object'||!pr.heroes||!pr.weapons)return false;
+ const d=defSave(),TM=allTeam(),ws={};for(const k in pr.weapons){const w=pr.weapons[k];if(WMAP[k]&&w&&typeof w==='object')ws[k]={lvl:Math.max(1,Math.min(20,+w.lvl||1)),xp:Math.max(0,+w.xp||0)};}
+ for(const k in d.weapons)if(!ws[k])ws[k]=d.weapons[k];const hs={},ld={};
+ TM.forEach(x=>{const o=pr.heroes[x.id];hs[x.id]=o&&typeof o==='object'?{lvl:Math.max(1,Math.min(100,+o.lvl||1)),xp:Math.max(0,+o.xp||0)}:d.heroes[x.id];
+  const l=pr.load&&pr.load[x.id];ld[x.id]=Array.isArray(l)&&l.length===2&&ws[l[0]]&&ws[l[1]]?l.slice():d.load[x.id].slice();});
+ sv.heroes=hs;sv.weapons=ws;sv.load=ld;return true;}
+function lamyOn(){return !!SAVE.pre;}
+function lamyApply(){if(!SAVE.pre)SAVE.pre=snapOf(SAVE);WEAPONS.forEach(w=>{SAVE.weapons[w.id]={lvl:20,xp:0};});allTeam().forEach(x=>{SAVE.heroes[x.id]={lvl:100,xp:0};});save();}
+function lamyOff(){const r=restorePre(SAVE);save();return r;}
+function cheatIsOn(n){const d=cheatData();return n==='LAMY'?lamyOn():n==='BAD'?BAD:n==='BONUS'?d.bonus:n==='SUPERMAN'?d.sup:n==='MELISSA'?!!d.mel:false;}
+function cheatSet(n,on){const d=cheatData();if(!d.u[n])return;
+ if(n==='LAMY'){if(on)lamyApply();else lamyOff();}
+ else if(n==='BAD')setMode(on);
+ else if(n==='BONUS'){d.bonus=!!on;setCheatData(d);if(on){const bd=bonusData();if(!bd.unlocked){bd.unlocked=true;setBonusData(bd);}}}
+ else if(n==='SUPERMAN'){d.sup=!!on;setCheatData(d);}
+ else if(n==='MELISSA'){d.mel=!!on;setCheatData(d);MEL=!!on;if(!BAD){if(!SAVE.heroes.barb)SAVE.heroes.barb={lvl:1,xp:0};if(!on&&SAVE.last==='barb')SAVE.last=HEROES[0].id;save();}}}
+const CON={LAMY:()=>BAD?'LAMY ON! All weapons Lv 20 and all villains Lv 100.':'LAMY ON! All weapons Lv 20 and all heroes Lv 100.',BAD:()=>'BAD ON! VILLAIN MODE: only the villains can be chosen. They have their own saved progress.',BONUS:()=>'BONUS ON! Tap PLAY, then Deploy: the Bonus Arena is at the top of the Select Dungeon screen.',SUPERMAN:()=>'SUPERMAN ON! You take no damage. Scores are not saved while SUPERMAN is on.',MELISSA:()=>BAD?'MELISSA ON! X-Barb joins the HERO roster. Turn off Villain Mode (BAD) to play her.':'MELISSA ON! X-Barb, the Barbed-Wire Bounty Hunter, joins your hero roster.'};
+const COFF={LAMY:'LAMY OFF. Back to your earned levels and weapons.',BAD:'BAD OFF. Hero Mode restored: your heroes are just as you left them.',BONUS:'BONUS OFF. Bonus Arena and Leaderboard hidden; scores are kept.',SUPERMAN:'SUPERMAN OFF. You can take damage again.',MELISSA:'MELISSA OFF. X-Barb leaves the roster; her levels are kept.'};
+function cheatReset(){let any=false;const d=cheatData();
+ if(d.sup){d.sup=false;any=true;}if(d.bonus){d.bonus=false;any=true;}if(d.mel){d.mel=false;any=true;}MEL=false;setCheatData(d);
+ const mute=SAVE.mute;save();const wasBad=BAD;
+ [false,true].forEach(m=>{const ob=BAD;BAD=m;try{let sv=null;try{sv=JSON.parse(store.get(m?BKEY:SKEY)||'null');}catch(e){sv=null;}
+  if(sv&&typeof sv==='object'&&sv.pre!==undefined){const L=loadSave();if(restorePre(L))any=true;store.set(m?BKEY:SKEY,JSON.stringify(L));}}finally{BAD=ob;}});
+ SAVE=loadSave();SAVE.mute=mute;if(wasBad){setMode(false);any=true;}save();return any;}
 function applyCheat(code){code=(code||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
- if(code==='LAMY'){WEAPONS.forEach(w=>{SAVE.weapons[w.id]={lvl:20,xp:0};});team().forEach(x=>{SAVE.heroes[x.id]={lvl:100,xp:0};});save();return 'lamy';}
- if(code==='BAD'){setMode(!BAD);return BAD?'badon':'badoff';}
- if(code==='BONUS'){if(bonusOn())return 'bonusagain';const bd=bonusData();bd.unlocked=true;setBonusData(bd);return 'bonus';}
- return false;}
+ if(code==='RESET')return cheatReset()?{m:'RESET! All cheats off. Back to your earned levels and weapons.',sfx:'win'}:{m:'Nothing to reset: no cheat was active.'};
+ if(!CNAMES.includes(code))return {m:'Invalid code.'};
+ const d=cheatData();const was=!!d.u[code];if(!was){d.u[code]=1;setCheatData(d);}
+ if(cheatIsOn(code))return {m:code+' is already unlocked and ON. Use the switch below to turn it off.'};
+ cheatSet(code,true);return {m:(was?code+' was already unlocked: turned ON. ':code+' UNLOCKED! ')+CON[code](),sfx:code==='BAD'?'roar':'win'};}
 let scene='menu',menu='title',G=null;const P={};let menuT=0;
 function solidsHit(x,y,r){for(const s of G.solids){const cx=clamp(x,s.x,s.x+s.w),cy=clamp(y,s.y,s.y+s.h);if((x-cx)*(x-cx)+(y-cy)*(y-cy)<r*r)return s;}return null;}
 function collide(o,r){for(let it=0;it<2;it++)for(const s of G.solids){const cx=clamp(o.x,s.x,s.x+s.w),cy=clamp(o.y,s.y,s.y+s.h);let dx=o.x-cx,dy=o.y-cy;const d2=dx*dx+dy*dy;
@@ -434,8 +478,8 @@ function makeRoom(i){const D=DUNGEONS[G.d];const boss=i===3;const rw=boss?780:62
   x.fillStyle=D.accent;x.globalAlpha=.4;x.fillRect(o.x+4,o.y+14,4,4);x.fillRect(o.x+o.w-8,o.y+20,4,4);x.globalAlpha=1;}
  for(let tx=60;tx<rw-40;tx+=150){x.fillStyle='#3a2a1a';x.fillRect(tx,10,4,12);}
  G.floor=c;}
-function startRun(d,diff,bonus){AU.init();const hid=SAVE.last;const h=HMAP[hid];
- G={d,diff,room:0,t:0,ts:1,hitStop:0,shake:0,hurtT:0,fade:1,trans:null,paused:false,state:'fight',wave:0,waves:2,toSpawn:0,spawnT:0,
+function startRun(d,diff,bonus){AU.init();if(!team().some(x=>x.id===SAVE.last))SAVE.last=team()[0].id;const hid=SAVE.last;const h=HMAP[hid];
+ G={sup:superOn(),supUsed:superOn(),d,diff,room:0,t:0,ts:1,hitStop:0,shake:0,hurtT:0,fade:1,trans:null,paused:false,state:'fight',wave:0,waves:2,toSpawn:0,spawnT:0,
   enemies:[],projs:[],parts:[],texts:[],hazards:[],rings:[],loot:[],swings:[],banners:[],chest:null,exit:null,boss:null,beam:null,tele:[],
   xpGained:0,lvlStart:SAVE.heroes[hid].lvl,found:[],kills:0,endT:0,victory:false,
   bonus:!!bonus,bw:0,bcleared:0,bphase:'rest',bL0:SAVE.heroes[hid].lvl,xpCap:Math.round(xpNeed(SAVE.heroes[hid].lvl)*3)};
@@ -493,7 +537,7 @@ function doAttack(){const wid=curW(),w=WMAP[wid];if(P.atkCd>0||P.dodgeT>0||(P.sp
   AU.sfx('beam');}
  return true;}
 function doDodge(){if(P.dodgeCd>0||P.dodgeT>0||(P.specT>0&&P.specType!=='flurry'))return;const mv=getMove();P.dodgeA=mv.m>.2?Math.atan2(mv.y,mv.x):P.face;P.specT=0;P.specType=null;
- const dg=P.hero.dg;P.dodgeT=(dg==='long'||dg==='flow')?.34:.28;P.dodgeSpd=dg==='charge'?360:400;P.dodgeCd=.55;P.inv=Math.max(P.inv,P.dodgeT+.05);P.set=new Set();AU.sfx('dodge');}
+ const dg=P.hero.dg;P.dodgeT=(dg==='long'||dg==='flow')?.34:dg==='bike'?.38:.28;P.dodgeSpd=dg==='charge'?360:dg==='bike'?470:400;P.dodgeCd=.55;P.inv=Math.max(P.inv,P.dodgeT+.05);P.set=new Set();AU.sfx('dodge');}
 function doSpecial(){if(P.specCd>0||P.specT>0||P.dodgeT>0)return;const id=P.hid,sx=P.hero.sx;P.specCd=HMAP[id].sp.cd;AU.sfx('special');P.set=new Set();
  if(sx==='slam'){P.specType='slam';P.specT=.42;P.specMax=.42;P.inv=Math.max(P.inv,.5);}
  else if(sx==='dash'){aimAt(260);P.specType='dash';P.specT=.3;P.dashA=P.aim;P.inv=Math.max(P.inv,.45);}
@@ -501,6 +545,11 @@ function doSpecial(){if(P.specCd>0||P.specT>0||P.dodgeT>0)return;const id=P.hid,
  else if(sx==='volley'){aimAt(400);P.specType='volley';P.specT=.15;const sp=specPow();const vc=P.hero.vcol||'#ff5a3a';
   for(let i=-1;i<=1;i++){const a=P.aim+i*.45;G.projs.push({x:P.x,y:P.y-22,vx:Math.cos(a)*330,vy:Math.sin(a)*330,r:7,dmg:sp*2.4,life:2.2,max:2.2,pierce:0,hit:new Set(),owner:'p',kind:'plasma',col:vc,boom:56,home:1,wid:curW(),knock:150,burn:1});}
   AU.sfx('plasma');}
+ else if(sx==='whip'){aimAt(220);P.specType='whip';P.specT=.22;const sp=specPow(),R=175,ARC=1.5;let hits=0;
+  for(const e of G.enemies){if(e.spawnT>0||e.hp<=0)continue;const dx=e.x-P.x,dy=e.y-P.y,d=hyp(dx,dy);if(d-e.r>R)continue;if(d>P.r+e.r&&Math.abs(angDiff(P.aim,Math.atan2(dy,dx)))>ARC/2+.12)continue;hitEnemy(e,sp*3.2,{wid:curW(),knock:160,ang:Math.atan2(dy,dx),bleed:1,heavy:1});hits++;}
+  for(let i=0;i<3;i++)G.swings.push({x:P.x,y:P.y-12,a:P.aim,arc:ARC,r:R*(.55+i*.22),t:.24,max:.24,col:i===1?'#6d7380':'#b9bec6',up:i===2});
+  for(let i=1;i<=10;i++){const k=i/10,a=P.aim+Math.sin(k*9)*.12;parts(P.x+Math.cos(a)*R*k,P.y-12+Math.sin(a)*R*k,2,i%2?'#dfe3ea':'#d8262c',70,.3,2);}
+  G.shake=Math.max(G.shake,hits?8:4);if(hits)G.hitStop=.06;AU.sfx('crit');}
  ftext(P.x,P.y-50,HMAP[id].sp.name.toUpperCase()+'!','#ffcf4a',13,1);}
 function updPlayer(dt){if(P.dead)return;const mv=getMove();
  P.atkCd-=dt;P.dodgeCd-=dt;P.specCd-=dt;P.inv-=dt;P.cloak-=dt;P.counter-=dt;P.chainT-=dt;P.hitT-=dt;P.aimT-=dt;IN.atkTap-=dt;
@@ -509,6 +558,7 @@ function updPlayer(dt){if(P.dead)return;const mv=getMove();
  if(IN.dodgeP){IN.dodgeP=false;doDodge();}if(IN.specP){IN.specP=false;doSpecial();}
  const spd=P.hero.spd;let moving=false;
  if(P.dodgeT>0){P.dodgeT-=dt;P.x+=Math.cos(P.dodgeA)*P.dodgeSpd*dt;P.y+=Math.sin(P.dodgeA)*P.dodgeSpd*dt;if(Math.random()<.6)parts(P.x,P.y,1,'#c8b89a',30,.35);
+  if(P.hero.dg==='bike'){if(Math.random()<.8)parts(P.x-Math.cos(P.dodgeA)*10,P.y,1,'#ffb03a',60,.25,2);for(const e of G.enemies){if(e.spawnT>0||e.hp<=0||P.set.has(e))continue;if(hyp(e.x-P.x,e.y-P.y)<e.r+P.r+8){P.set.add(e);hitEnemy(e,specPow()*.7,{wid:curW(),knock:200,ang:P.dodgeA,bleed:.5});}}}
   if(P.hero.dg==='charge')for(const e of G.enemies){if(e.spawnT>0||e.hp<=0||P.set.has(e))continue;if(hyp(e.x-P.x,e.y-P.y)<e.r+P.r+6){P.set.add(e);hitEnemy(e,specPow()*.8,{wid:curW(),knock:280,ang:P.dodgeA,heavy:1});}}
   if(P.dodgeT<=0&&P.hero.dg==='cloak'){P.cloak=1.7;ftext(P.x,P.y-46,'CLOAKED','#9cff9c',11,.8);}
   if(P.dodgeT<=0&&P.hero.dg==='flow'){const hv=Math.round(P.maxHp*.05);P.hp=Math.min(P.maxHp,P.hp+hv);ftext(P.x,P.y-46,'REFORMED +'+hv,'#dfe5ec',11,.8);parts(P.x,P.y-12,12,'#cfd6de',90,.4);}}
@@ -570,7 +620,7 @@ function explode(x,y,r,dmg,owner,wid,knock){parts(x,y,26,'#ffb03a',220,.5,3);par
  G.rings.push({x,y,rad:4,spd:r*5,w:4,max:r,dmg:0,vis:1,col:'#ffcf6a'});
  if(owner==='p'){for(const e of G.enemies){if(e.spawnT>0||e.hp<=0)continue;const d=hyp(e.x-x,e.y-y);if(d<r+e.r)hitEnemy(e,dmg*(d<r*.5?1:.7),{wid,knock:knock||160,ang:Math.atan2(e.y-y,e.x-x)});}}
  else{if(hyp(P.x-x,P.y-y)<r+P.r*.5)hurtPlayer(dmg);}}
-function hurtPlayer(dmg){if(P.dead||G.state==='victory')return;if(P.inv>0){if(P.dodgeT>0&&P.hero.dg==='slip'&&P.counter<=0){P.counter=1.6;ftext(P.x,P.y-46,'SLIP! COUNTER READY','#ffcf4a',12,1);AU.sfx('counter');G.hitStop=.06;}return;}
+function hurtPlayer(dmg){if(P.dead||G.state==='victory')return;if(P.inv>0){if(P.dodgeT>0&&P.hero.dg==='slip'&&P.counter<=0){P.counter=1.6;ftext(P.x,P.y-46,'SLIP! COUNTER READY','#ffcf4a',12,1);AU.sfx('counter');G.hitStop=.06;}return;}if(G.sup){if(!(G.supT>G.t)){G.supT=G.t+.5;ftext(P.x,P.y-40,'0','#4aa3ff',12,.5);}return;}
  const d=Math.max(1,Math.round(dmg*(1-P.hero.def)*rnd(.9,1.1)));P.hp-=d;P.inv=.6;P.hitT=.15;G.hurtT=.35;G.shake=Math.max(G.shake,7);AU.sfx('hurt');ftext(P.x,P.y-40,'-'+d,'#ff5050',13,.8);P.combo=0;
  if(P.hp<=0){P.hp=0;P.dead=true;G.state='dead';G.endT=1.8;parts(P.x,P.y-12,50,'#d8262c',200,1,3);AU.sfx('lose');AU.music(false);save();}}
 function eproj(x,y,a,spd,dmg,r,col,life){G.projs.push({x,y,vx:Math.cos(a)*spd,vy:Math.sin(a)*spd,r:r||5,dmg,life:life||3,max:life||3,owner:'e',col:col||'#ff4a6a',kind:'orb',hit:null});}
@@ -781,7 +831,7 @@ function drawPlayer(){if(P.dead){ctx.save();ctx.translate(P.x,P.y-6);ctx.rotate(
  shadow(P.x,P.y,13);if(P.counter>0){ctx.strokeStyle='#ffcf4a';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(P.x,P.y,18,8,0,0,TAU);ctx.stroke();}
  const fr=Math.floor(P.walk)%2;const a=P.cloak>0?.28:(P.inv>0&&P.dodgeT<=0&&Math.floor(G.t*20)%2?.55:1);
  const y=P.y-P.z-(fr?1:0)+2;
- if(P.dodgeT>0){ctx.save();ctx.globalAlpha=.75;ctx.translate(P.x,y-18);ctx.rotate((1-P.dodgeT/.3)*TAU*(Math.cos(P.dodgeA)<0?-1:1));const s=sprite(P.hid,P.hid,null,0);ctx.drawImage(s.c,-15,-20,30,40);ctx.restore();return;}
+ if(P.dodgeT>0){ctx.save();ctx.globalAlpha=.75;ctx.translate(P.x,y-18);ctx.rotate(P.hero.dg==='bike'?(Math.cos(P.dodgeA)<0?-.9:.9):(1-P.dodgeT/.3)*TAU*(Math.cos(P.dodgeA)<0?-1:1));const s=sprite(P.hid,P.hid,null,0);ctx.drawImage(s.c,-15,-20,30,40);ctx.restore();return;}
  drawSprite(P.hid,P.hid,null,P.x,y,2.5,P.flip,fr,P.hitT,a);
  const w=WMAP[curW()];const la=P.aimT>0?P.aim:P.face;ctx.save();ctx.globalAlpha=a;drawHeldWeapon(P.x+(P.flip?-6:6),y-17,la,w);ctx.restore();
  if(P.cloak>0){ctx.strokeStyle='rgba(156,255,156,.5)';ctx.lineWidth=1;ctx.strokeRect(P.x-14+Math.sin(G.t*30)*2,y-40,28,40);}}
@@ -801,6 +851,7 @@ function drawHUD(){ctx.setTransform(DPR,0,0,DPR,0,0);ctx.imageSmoothingEnabled=f
  txt(Math.ceil(P.hp)+'/'+P.maxHp,x0+56,y0+27,9,'#fff');
  ctx.fillStyle='#1c1608';ctx.fillRect(x0+52,y0+31,bw,6);ctx.fillStyle='#ffcf4a';ctx.fillRect(x0+52,y0+31,st.lvl>=100?bw:bw*st.xp/xpNeed(st.lvl),6);
  txt(st.lvl>=100?'MAX':'XP '+Math.floor(st.xp)+'/'+xpNeed(st.lvl),x0+52,y0+48,9,'#ffe9a0');
+ if(G.sup){txt('SUPERMAN',x0+52+bw-2,y0+48,9,'#4aa3ff','right');}
  const wid=curW(),w=WMAP[wid],R=RAR[w.r],ws=SAVE.weapons[wid];ctx.drawImage(icon(wid),x0,y0+52,18,18);txt(w.name+' Lv'+ws.lvl,x0+22,y0+64,10,R.c);
  ctx.fillStyle='#111';ctx.fillRect(x0+22,y0+67,bw,3);ctx.fillStyle=R.c;ctx.fillRect(x0+22,y0+67,bw*(ws.lvl>=20?1:ws.xp/wxpNeed(ws.lvl)),3);
  const D=DUNGEONS[G.d];const sub=G.bonus?('Wave '+Math.max(1,G.bw)+(G.bw>0&&G.bw%5===0?' \u00B7 BOSS WAVE':'')+' \u00B7 Cleared '+G.bcleared):G.room<3?('Room '+(G.room+1)+'/4 \u00B7 Wave '+Math.max(1,G.wave)+'/'+G.waves):'BOSS ROOM';
@@ -851,10 +902,14 @@ const M={
   h('button',{class:'pri big',data:{a:'roster'}},'\u25B6 PLAY'),
   h('div',{class:'row',style:{marginTop:'0'}},h('button',{data:{a:'help'}},'How to Play'),h('button',{data:{a:'mute'}},'Sound: '+(SAVE.mute?'Off':'On')),h('button',{data:{a:'cheat'}},'Cheat Code'),bonusOn()?h('button',{data:{a:'board'}},'Leaderboard'):null),
   h('div',{class:'foot'},'Weapons collected: '+owned().length+'/'+WEAPONS.length+' \u00B7 Total kills: '+SAVE.kills+(store.ok?' \u00B7 Progress saves on this device':' \u00B7 Progress is not saved in this view'))));},
- cheat(){return h('div',{class:'scr dim'},hdr('title','Cheat Code'),h('div',{class:'help'},h('p',null,'Enter a code to unlock bonuses.'),BAD?h('div',{class:'vmrow'},h('span',{class:'vm'},'\u2620 VILLAIN MODE ON'),h('button',{data:{a:'heromode'}},'Back to Hero Mode')):null,
+ cheat(){const cd=cheatData();const un=CNAMES.filter(n=>cd.u[n]);
+  return h('div',{class:'scr dim'},hdr('title','Cheat Code'),h('div',{class:'help'},h('p',null,'Enter a code to unlock a cheat. Unlocked cheats stay listed below with an ON/OFF switch.'),BAD?h('div',{class:'vmrow'},h('span',{class:'vm'},'\u2620 VILLAIN MODE ON'),h('button',{data:{a:'heromode'}},'Back to Hero Mode')):null,
    h('input',{id:'cheatIn',type:'text',autocomplete:'off',autocapitalize:'characters',spellcheck:'false',placeholder:'ENTER CODE',style:{width:'100%',padding:'12px',fontSize:'18px',textAlign:'center',textTransform:'uppercase',boxSizing:'border-box',margin:'8px 0'}}),
-   h('div',{id:'cheatMsg',style:{minHeight:'24px',textAlign:'center',fontWeight:'bold'}},CHEAT.msg||'')),
-   h('div',{class:'row'},h('button',{class:'pri',data:{a:'cheatgo'}},'Activate'),h('button',{data:{a:'title'}},'Back')));},
+   h('div',{class:'row',style:{marginTop:'0'}},h('button',{class:'pri',data:{a:'cheatgo'}},'Activate'),h('button',{data:{a:'title'}},'Back')),
+   h('div',{id:'cheatMsg',style:{minHeight:'24px',textAlign:'center',fontWeight:'bold',margin:'6px 0'}},CHEAT.msg||''),
+   un.length?h('div',{class:'clist'},un.map(n=>{const on=cheatIsOn(n);return h('div',{class:'crow'+(on?' on':''),data:{c:n}},h('div',{class:'t'},h('b',null,n),h('small',null,CDESC[n])),
+     h('button',{class:on?'pri':'',data:{a:'ctog',id:n}},on?'ON':'OFF'));}),
+    h('div',{class:'row'},h('button',{data:{a:'creset'}},'RESET (turn all cheats off)'))):null));},
  help(){const li=(b,t)=>h('li',null,h('b',null,b),' '+t);
   return h('div',{class:'scr dim'},hdr('title','How to Play'),h('div',{class:'help'},h('ul',null,
   li('Move:','drag anywhere on the left side (virtual joystick). Keyboard: WASD / arrows.'),
@@ -868,7 +923,7 @@ const M={
   li('Levels:','heroes level 1\u2013100 from XP (kills, room clears, bosses). Weapons level 1\u201320 from kills made with them. Duplicate drops add weapon XP.'),
   h('li',null,h('b',null,'Rarity: '),RAR.map((R,i)=>[i?' < ':'',h('span',{class:'r'+i},R.n)]),'. Harder difficulties, later dungeons and bosses drop better loot.'),
   li('\u2605','marks a signature weapon for that hero: +15% damage.'),
-  li('Cheat codes:','tap Cheat Code on the title screen. LAMY maxes every weapon (Lv 20) and every character (Lv 100) in the current mode. BAD switches Villain Mode on or off; villains have their own saved progress. BONUS unlocks the Bonus Arena.'),
+  li('Cheat codes:','tap Cheat Code on the title screen. LAMY maxes every weapon (Lv 20) and every character (Lv 100) in the current mode. BAD switches Villain Mode on or off; villains have their own saved progress. BONUS shows the Bonus Arena. SUPERMAN makes you invincible (scores are not saved while on). MELISSA adds a 5th hero, X-Barb, to the hero roster. Unlocked cheats stay listed on the Cheat Code screen with ON/OFF switches; RESET turns every cheat off and restores your earned levels.'),
   li('Bonus Arena:','enter cheat code BONUS to unlock endless waves with a villain boss every 5th wave. Find it on the Select Dungeon screen. Enter your name at the end to post your record on the leaderboard.'),
   li('iPhone:','Safari \u2192 Share \u2192 Add to Home Screen for full-screen play. Turn off silent mode to hear sound.'))));},
  roster(){const sel=SAVE.last;return h('div',{class:'scr'},hdr('title',BAD?'Choose Your Villain':'Choose Your Hero'),BAD?h('div',{class:'vmrow'},h('span',{class:'vm'},'\u2620 VILLAIN MODE ON'),h('button',{data:{a:'heromode'}},'Back to Hero Mode')):null,h('div',{class:'grid'},team().map(x=>{const st=SAVE.heroes[x.id],Lv=st.lvl,ld=SAVE.load[x.id];
@@ -890,7 +945,7 @@ const M={
   const cards=DUNGEONS.map((D,i)=>{const un=SAVE.clr[d]>=i,lo=D.base+DIFFS[d].off,done=SAVE.clr[d]>i;
    return h('div',{class:'dg'},h('canvas',{class:'sw',data:{sw:i},width:2,height:16}),h('div',{class:'t'},h('b',null,(i+1)+'. '+D.name+(done?' \u2714':'')),h('small',null,'Enemy Lv '+lo+'\u2013'+(lo+3)+' \u00B7 Boss: '+BOSSES[D.boss].name)),
     un?h('button',{class:'pri',data:{a:'go',i}},'Go'):h('button',{disabled:true},'Locked'));});
-  const bd=bonusData(),pb=bd.pb;const bc=bd.unlocked?h('div',{class:'dg bonusc'},h('div',{class:'sw',style:{background:'linear-gradient(#ffcf4a,#d8572a)'}}),h('div',{class:'t'},h('b',null,'\u2605 Bonus Arena'),h('small',null,'Endless waves \u00B7 villain boss every 5th wave'+(pb?' \u00B7 Your best: wave '+pb.wave:''))),
+  const bd=bonusData(),pb=bd.pb;const bc=bonusOn()?h('div',{class:'dg bonusc'},h('div',{class:'sw',style:{background:'linear-gradient(#ffcf4a,#d8572a)'}}),h('div',{class:'t'},h('b',null,'\u2605 Bonus Arena'),h('small',null,'Endless waves \u00B7 villain boss every 5th wave'+(pb?' \u00B7 Your best: wave '+pb.wave:''))),
    h('div',{style:{display:'flex',flexDirection:'column',gap:'6px'}},h('button',{class:'pri',data:{a:'bonus'}},'Bonus Arena'),h('button',{data:{a:'board'}},'Leaderboard'))):null;
   return h('div',{class:'scr dim'},hdr('roster','Select Dungeon',HMAP[hid].name+' Lv '+Lv),h('div',{class:'pills'},pills),h('div',{class:'dl'},bc,cards),
    h('div',{class:'foot c'},'Beat a dungeon to unlock the next one on that difficulty. Harder difficulties unlock by hero level and drop rarer loot.'));},
@@ -910,7 +965,7 @@ const M={
    h('div',{class:'stat'},o.hero+' \u00B7 Lv '+o.lvlStart,st.lvl>o.lvlStart?[' \u2192 ',h('b',null,String(st.lvl))]:null,h('br'),'Waves cleared: ',h('b',{id:'boWaves'},String(o.cleared)),h('br'),
     'Kills: '+o.kills+' \u00B7 XP earned: '+o.xp,h('br'),o.found.length?['New weapons: ',o.found.map((w,i)=>[i?', ':'',rspan(w)]),h('br')]:null,
     'Personal best: ',o.pb?h('b',null,'Wave '+o.pb.wave):'none yet',o.pb?' ('+o.pb.hero+')':'',o.newPB?h('span',{class:'npb'},' NEW BEST!'):null),
-   can?h('div',{class:'lbf'},h('label',{for:'lbName'},o.submitted?'Record posted':'Enter your name for the leaderboard'),
+   o.sup?h('div',{class:'foot',id:'supNote'},'Scores are not saved while SUPERMAN is on.'):can?h('div',{class:'lbf'},h('label',{for:'lbName'},o.submitted?'Record posted':'Enter your name for the leaderboard'),
      h('input',{id:'lbName',type:'text',maxlength:'16',autocomplete:'off',autocapitalize:'words',spellcheck:'false',placeholder:'YOUR NAME',value:o.name||null,disabled:o.submitted}),
      h('div',{id:'lbMsg',class:'foot'},o.submitted?'Submitted as '+o.name+'.':'1 to 16 characters.'),h('button',{class:'pri',data:{a:'lbsubmit'},disabled:o.submitted},'Submit')):h('div',{class:'foot'},'Clear at least one wave to post a record.'),
    h('div',{class:'row'},h('button',{class:'pri',data:{a:'bonus'}},'Play Again'),h('button',{data:{a:'board'}},'Leaderboard'),h('button',{data:{a:'roster'}},BAD?'Villains':'Heroes'))));},
@@ -934,9 +989,9 @@ function openBoard(hl,back,submitRec){LBV={hl:hl||null,back:back||'title',tok:LB
   if(!online)rows=LB.local().slice(0,10);
   if(tok!==LBV.tok||menu!=='board')return;fillBoard(rows,online);})();}
 let lastBonus=null;
-function finishBonus(quit){AU.music(false);save();const bd=bonusData();const cleared=G.bcleared||0;const prev=bd.pb?bd.pb.wave:0;const newPB=cleared>prev;
+function finishBonus(quit){AU.music(false);save();const bd=bonusData();const cleared=G.bcleared||0;const prev=bd.pb?bd.pb.wave:0;const sup=!!(G.supUsed||superOn());const newPB=!sup&&cleared>prev;
  if(newPB){bd.pb={wave:cleared,hero:P.hero.name};setBonusData(bd);}
- const o={bonus:1,quit:!!quit,hid:P.hid,hero:P.hero.name,cleared,reached:G.bw,kills:G.kills,xp:G.xpGained,lvlStart:G.lvlStart,found:G.found.slice(),newPB,pb:bd.pb,submitted:false,name:''};
+ const o={bonus:1,quit:!!quit,hid:P.hid,hero:P.hero.name,cleared,reached:G.bw,kills:G.kills,xp:G.xpGained,lvlStart:G.lvlStart,found:G.found.slice(),newPB,pb:bd.pb,submitted:false,name:'',sup};
  lastBonus=o;scene='menu';showMenu('bover',o);}
 let lastResult=null;
 function showMenu(name,data){if(name!=='pause')scene='menu';menu=name;const prev=ui.querySelector('.scr');const top=prev&&prev.dataset.m===name?prev.scrollTop:0;
@@ -958,14 +1013,14 @@ on(ui,'click',e=>{const t=e.target.closest('[data-a]');if(!t||t.disabled)return;
   case 'again':startRun(lastResult.d,lastResult.diff);break;
   case 'next':startRun(lastResult.d+1,lastResult.diff);break;
   case 'cheat':CHEAT.msg='';showMenu('cheat');break;
-  case 'cheatgo':{const el=document.getElementById('cheatIn');const ok=applyCheat(el?el.value:'');
-   CHEAT.msg=ok==='bonus'?'BONUS ARENA UNLOCKED! Tap PLAY, then Deploy: the Bonus Arena is at the top of the Select Dungeon screen.':ok==='bonusagain'?'Bonus Arena is already unlocked. Find it on the Select Dungeon screen.':ok==='lamy'?(BAD?'CHEAT ACTIVATED! All weapons Lv 20 and all villains Lv 100.':'CHEAT ACTIVATED! All weapons Lv 20 and all heroes Lv 100.'):ok==='badon'?'VILLAIN MODE ON! Only the villains can be chosen. They have their own saved progress.':ok==='badoff'?'HERO MODE RESTORED. Your heroes are just as you left them.':'Invalid code.';
-   showMenu('cheat');if(ok)AU.sfx(ok==='badon'?'roar':'win');break;}
+  case 'cheatgo':{const el=document.getElementById('cheatIn');const r=applyCheat(el?el.value:'');CHEAT.msg=r.m;showMenu('cheat');if(r.sfx)AU.sfx(r.sfx);break;}
+  case 'ctog':{const n=ds.id;if(!cheatData().u[n])break;const on=!cheatIsOn(n);cheatSet(n,on);CHEAT.msg=on?CON[n]():COFF[n];showMenu('cheat');AU.sfx(on?(n==='BAD'?'roar':'win'):'dodge');break;}
+  case 'creset':{CHEAT.msg=cheatReset()?'RESET! All cheats off. Back to your earned levels and weapons.':'Nothing to reset: no cheat was active.';showMenu('cheat');break;}
   case 'bonus':if(bonusOn())startRun(2,0,true);break;
   case 'board':openBoard(null,menu==='bover'?'bover':menu,null);break;
   case 'boardback':{const b=LBV.back;if(b==='bover'&&lastBonus)showMenu('bover',lastBonus);else showMenu(M[b]&&b!=='board'&&b!=='thanks'&&b!=='result'?b:'title');break;}
   case 'thxgo':showMenu('result',lastResult);break;
-  case 'lbsubmit':{const o=lastBonus;if(!o||o.submitted||o.cleared<1)break;const el=document.getElementById('lbName'),msg=document.getElementById('lbMsg');const nm=cleanName(el?el.value:'');
+  case 'lbsubmit':{const o=lastBonus;if(!o||o.submitted||o.cleared<1||o.sup||superOn())break;const el=document.getElementById('lbName'),msg=document.getElementById('lbMsg');const nm=cleanName(el?el.value:'');
    if(!nm){if(msg)msg.textContent='Please enter a name (1 to 16 characters).';if(el)el.focus();break;}
    if(el)el.blur();o.submitted=true;o.name=nm;const rec={name:nm,wave:clamp(o.cleared,1,500),hero:cleanName(o.hero)||'?'};rec.t=LB.addLocal(rec);openBoard(rec,'bover',rec);break;}
   case 'heromode':setMode(false);CHEAT.msg='';showMenu(menu==='cheat'?'cheat':menu);break;
@@ -978,7 +1033,7 @@ resize();showMenu('title');raf=requestAnimationFrame(frame);
 try{if(document.head&&!document.querySelector('link[rel=apple-touch-icon]')){const c=document.createElement('canvas');c.width=180;c.height=180;const x=c.getContext('2d');x.fillStyle='#1b1427';x.fillRect(0,0,180,180);x.imageSmoothingEnabled=false;x.drawImage(sprite('arnold','arnold',null,0).c,30,10,120,160);
  const l=document.createElement('link');l.rel='apple-touch-icon';l.href=c.toDataURL('image/png');document.head.appendChild(l);}}catch(e){}
 return {destroy(){alive=false;cancelAnimationFrame(raf);cleanup.forEach(f=>f());if(ro)ro.disconnect();try{if(AU.c)AU.c.close();}catch(e){}root.replaceChildren();},
- _debug:{get G(){return G;},P,save:()=>SAVE,startRun,fps:()=>fps,scene:()=>scene,IN,errs:()=>errs,gainXP:n=>gainXP(n),setLvl:(id,l)=>{SAVE.heroes[id].lvl=l;},giveAll:()=>{WEAPONS.forEach(w=>{if(!SAVE.weapons[w.id])SAVE.weapons[w.id]={lvl:1,xp:0};});save();},showMenu,step:(n,dt)=>{for(let i=0;i<n;i++){if(scene==='play'&&G&&!G.paused)updateGame(dt||1/60);}render();},menu:()=>menu,roll:b=>rollRarity(b),room:i=>loadRoom(i),drop:(x,y,b)=>dropWeapon(x,y,b),mode:()=>BAD,setMode,finishRun:(w,q)=>finishRun(w,q),killBoss:()=>{if(G&&G.boss)killEnemy(G.boss,curW());},spec:()=>doSpecial(),dodge:()=>doDodge(),quotes:QUOTES,
+ _debug:{cheats:{data:cheatData,on:cheatIsOn,set:cheatSet,reset:cheatReset,sup:superOn,hurt:n=>hurtPlayer(n)},get G(){return G;},P,save:()=>SAVE,startRun,fps:()=>fps,scene:()=>scene,IN,errs:()=>errs,gainXP:n=>gainXP(n),setLvl:(id,l)=>{SAVE.heroes[id].lvl=l;},giveAll:()=>{WEAPONS.forEach(w=>{if(!SAVE.weapons[w.id])SAVE.weapons[w.id]={lvl:1,xp:0};});save();},showMenu,step:(n,dt)=>{for(let i=0;i<n;i++){if(scene==='play'&&G&&!G.paused)updateGame(dt||1/60);}render();},menu:()=>menu,roll:b=>rollRarity(b),room:i=>loadRoom(i),drop:(x,y,b)=>dropWeapon(x,y,b),mode:()=>BAD,setMode,finishRun:(w,q)=>finishRun(w,q),killBoss:()=>{if(G&&G.boss)killEnemy(G.boss,curW());},spec:()=>doSpecial(),dodge:()=>doDodge(),team:()=>team().map(x=>x.id),mel:()=>MEL,quotes:QUOTES,
  bonus:{start:()=>startRun(2,0,true),on:bonusOn,data:bonusData,jump:n=>{G.enemies=[];G.boss=null;G.projs=[];G.hazards=[];G.rings=[];G.bw=n-1;G.bcleared=n-1;G.bphase='rest';G.toSpawn=0;G.spawnT=0;},
   killAll:()=>{for(const e of G.enemies.slice())if(e.hp>0&&!e.def.boss)killEnemy(e,curW());G.enemies=G.enemies.filter(e=>e.hp>0);},hurt:n=>hurtPlayer(n),mq:MQUOTES,nextMQ,mqReset:()=>{MQD=[];},VB,VBO,lb:LB,lbCfg:(u,k,ms)=>{LBC.url=u;LBC.key=k;if(ms)LBC.ms=ms;},lbv:()=>LBV,last:()=>lastBonus,clean:cleanName}}};
 }
